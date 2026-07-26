@@ -1,0 +1,138 @@
+<!doctype html>
+<html lang="zh-Hant">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="description" content="將電腦中的中文字型轉成 Arduino OLED 可用的 U8g2 字型庫。">
+  <title>字鑄所｜OLED U8g2 中文字型庫產生器</title>
+  <link rel="stylesheet" href="static/style.css">
+</head>
+<body>
+  <header class="site-header">
+    <a class="brand" href="./" aria-label="回到字鑄所首頁">
+      <span class="brand-mark" aria-hidden="true">字</span>
+      <span>字鑄所 <small>U8g2 FONT FOUNDRY</small></span>
+    </a>
+    <span class="status-pill"><i aria-hidden="true"></i> Raspberry Pi 線上轉換</span>
+  </header>
+
+  <main>
+    <section class="hero" aria-labelledby="page-title">
+      <div>
+        <p class="eyebrow">LOCAL FONT → PIXEL GLYPH → ARDUINO HEADER</p>
+        <h1 id="page-title">把螢幕上的中文字，<br><em>鑄進 OLED。</em></h1>
+      </div>
+      <p class="hero-copy">選擇這台電腦已安裝的中文字型，只收錄程式真正需要的字，下載可直接 <code>#include</code> 的 U8g2 字型庫。</p>
+    </section>
+
+    <section class="workspace" aria-label="字型庫設定">
+      <form id="font-form" class="control-panel">
+        <div class="panel-heading">
+          <span>01</span>
+          <div><p>設定字模</p><h2>選字、選型、選尺寸</h2></div>
+        </div>
+
+        <label for="text-input">要收錄的文字 <b id="char-count">0 / 256</b></label>
+        <textarea id="text-input" maxlength="1000" rows="5" placeholder="例如：溫度正常　濕度過高　連線成功" required>溫度正常</textarea>
+        <p class="field-note">重複字元只會收錄一次；字越少，Arduino Flash 用量越小。</p>
+
+        <div class="field-grid">
+          <div>
+            <label for="font-select">本機中文字型</label>
+            <select id="font-select" required>
+              <option value="">正在偵測這台電腦的字型…</option>
+            </select>
+          </div>
+          <div>
+            <label for="size-select">字模尺寸</label>
+            <select id="size-select">
+              <option value="16">16 × 16 px</option>
+              <option value="24" selected>24 × 24 px</option>
+              <option value="32">32 × 32 px</option>
+              <option value="48">48 × 48 px</option>
+            </select>
+          </div>
+        </div>
+
+        <details class="custom-font">
+          <summary>清單中沒有我的字型</summary>
+          <div class="custom-row">
+            <label class="sr-only" for="custom-font-name">輸入字型的完整名稱</label>
+            <input id="custom-font-name" type="text" placeholder="輸入字型完整名稱，例如 Noto Sans TC">
+            <button id="add-font" type="button">測試並加入</button>
+          </div>
+        </details>
+
+        <label for="variable-input">C/C++ 字型變數名稱</label>
+        <input id="variable-input" type="text" value="u8g2_font_zh_custom_24" pattern="[A-Za-z_][A-Za-z0-9_]{0,62}" required>
+
+        <div class="preview-block">
+          <div class="preview-title">
+            <span>OLED 點陣預覽</span>
+            <small id="preview-meta">24 × 24 px</small>
+          </div>
+          <div id="glyph-preview" class="glyph-preview" aria-live="polite"></div>
+        </div>
+
+        <button id="generate-button" class="primary-button" type="submit">
+          <span>產生並下載 .h 字型庫</span><b aria-hidden="true">↓</b>
+        </button>
+        <p id="form-message" class="form-message" role="status" aria-live="polite"></p>
+      </form>
+
+      <aside class="guide-panel">
+        <div class="panel-heading">
+          <span>02</span>
+          <div><p>接上 Arduino</p><h2>三步驟開始顯示</h2></div>
+        </div>
+
+        <ol class="steps">
+          <li><b>安裝函式庫</b><span>Arduino IDE → 函式庫管理員，搜尋並安裝 <strong>U8g2</strong>。</span></li>
+          <li><b>放入字型檔</b><span>把下載的 <code id="header-name">u8g2_font_zh_custom_24.h</code> 放到 <code>.ino</code> 同一個資料夾。</span></li>
+          <li><b>Include 並顯示</b><span>程式檔請使用 UTF-8 編碼，中文必須包含在剛才輸入的文字內。</span></li>
+        </ol>
+
+        <div class="code-card">
+          <div class="code-bar"><span>OLED_Chinese.ino</span><button id="copy-code" type="button">複製程式</button></div>
+          <pre><code id="arduino-code">#include &lt;Arduino.h&gt;
+#include &lt;U8g2lib.h&gt;
+#include "u8g2_font_zh_custom_24.h"
+
+// 請依 OLED 型號修改建構式
+U8G2_SSD1306_128X64_NONAME_F_HW_I2C u8g2(
+  U8G2_R0, U8X8_PIN_NONE
+);
+
+void setup() {
+  u8g2.begin();
+  u8g2.enableUTF8Print();
+}
+
+void loop() {
+  u8g2.clearBuffer();
+  u8g2.setFont(u8g2_font_zh_custom_24);
+  u8g2.setFontPosTop();
+  u8g2.drawUTF8(0, 0, "溫度正常");
+  u8g2.sendBuffer();
+  delay(1000);
+}</code></pre>
+        </div>
+
+        <div class="notice">
+          <b>記憶體提醒</b>
+          <p>48 × 48 字模會明顯增加 Flash 用量。建議只輸入實際會顯示的字，並避免一次收錄整套中文字。</p>
+        </div>
+      </aside>
+    </section>
+
+    <section class="how-it-works" aria-label="處理流程">
+      <div><span>1</span><b>偵測本機字型</b><p>只檢查常見中文字型名稱，不讀取個人文件。</p></div>
+      <div><span>2</span><b>瀏覽器繪製點陣</b><p>字形在你的電腦完成單色化，完整字型檔不會上傳。</p></div>
+      <div><span>3</span><b>樹莓派轉成 U8g2</b><p>使用官方 bdfconv 格式，下載後可直接 include。</p></div>
+    </section>
+  </main>
+
+  <footer><span>字鑄所 / OLED U8g2 中文字型庫產生器</span><span>在地字形，精簡收錄，離線顯示。</span></footer>
+  <script src="static/app.js" defer></script>
+</body>
+</html>

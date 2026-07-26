@@ -1,0 +1,18 @@
+[Unit]
+Description=OLED U8g2 Chinese Font Generator
+After=network.target
+
+[Service]
+Type=simple
+User=pi5
+Group=pi5
+WorkingDirectory=/home/pi5/oled_u8g2_font_web
+Environment=PYTHONUNBUFFERED=1
+ExecStart=/home/pi5/oled_u8g2_font_web/.venv/bin/gunicorn --config gunicorn.conf.py app:app
+Restart=on-failure
+RestartSec=3
+NoNewPrivileges=true
+PrivateTmp=true
+
+[Install]
+WantedBy=multi-user.target
