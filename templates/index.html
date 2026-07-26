@@ -36,11 +36,22 @@
         <textarea id="text-input" maxlength="1000" rows="5" placeholder="例如：溫度正常　濕度過高　連線成功" required>溫度正常</textarea>
         <p class="field-note">重複字元只會收錄一次；字越少，Arduino Flash 用量越小。</p>
 
-        <div class="field-grid">
+        <div class="font-access-box">
           <div>
-            <label for="font-select">本機中文字型</label>
-            <select id="font-select" required>
-              <option value="">正在偵測這台電腦的字型…</option>
+            <b>Windows 系統字型</b>
+            <span id="font-access-status">尚未取得本機字型讀取權限</span>
+          </div>
+          <button id="scan-fonts" type="button">授權並讀取全部字型</button>
+        </div>
+        <p class="field-note">使用 Chromium 的本機字型權限讀取 Windows 已安裝字型清單（通常位於 <code>C:\Windows\Fonts</code>）；只有選定字型後才會讀取該字型資料。</p>
+
+        <div class="field-grid">
+          <div class="font-picker">
+            <label for="font-search">搜尋已安裝字型</label>
+            <input id="font-search" type="search" placeholder="輸入中文字型名稱…" disabled>
+            <label for="font-select">本機字型下拉選單</label>
+            <select id="font-select" required disabled>
+              <option value="">請先授權讀取 Windows 字型</option>
             </select>
           </div>
           <div>
@@ -54,14 +65,11 @@
           </div>
         </div>
 
-        <details class="custom-font">
-          <summary>清單中沒有我的字型</summary>
-          <div class="custom-row">
-            <label class="sr-only" for="custom-font-name">輸入字型的完整名稱</label>
-            <input id="custom-font-name" type="text" placeholder="輸入字型完整名稱，例如 Noto Sans TC">
-            <button id="add-font" type="button">測試並加入</button>
-          </div>
-        </details>
+        <div class="font-fallback">
+          <span>瀏覽器不支援或目前不是 HTTPS？</span>
+          <button id="choose-font-files" type="button">從 Windows 字型資料夾選取檔案</button>
+          <input id="font-files" class="sr-only" type="file" accept=".ttf,.otf,.ttc,.woff,.woff2" multiple>
+        </div>
 
         <label for="variable-input">C/C++ 字型變數名稱</label>
         <input id="variable-input" type="text" value="u8g2_font_zh_custom_24" pattern="[A-Za-z_][A-Za-z0-9_]{0,62}" required>

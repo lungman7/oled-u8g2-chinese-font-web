@@ -72,12 +72,45 @@ textarea, input, select {
 textarea { resize: vertical; min-height: 122px; font-size: 23px; line-height: 1.6; }
 textarea:focus, input:focus, select:focus { border-color: var(--purple); box-shadow: 4px 4px 0 var(--purple); }
 .field-note { color: var(--muted); font-size: 12px; line-height: 1.5; margin: 8px 0 0; }
-.field-grid { display: grid; grid-template-columns: 1fr 180px; gap: 18px; }
-.custom-font { margin-top: 12px; font-size: 12px; }
-.custom-font summary { cursor: pointer; color: var(--green); font-weight: 800; }
-.custom-row { display: flex; margin-top: 9px; }
-.custom-row input { flex: 1; }
-.custom-row button { border: 1px solid var(--ink); border-left: 0; background: var(--ink); color: #fff; padding: 0 15px; cursor: pointer; }
+.font-access-box {
+  margin-top: 25px;
+  border: 1px solid var(--ink);
+  background: var(--acid);
+  padding: 14px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 16px;
+}
+.font-access-box b { display: block; font-size: 13px; margin-bottom: 3px; }
+.font-access-box span { display: block; font-size: 11px; color: #42472f; }
+.font-access-box button,
+.font-fallback button {
+  border: 1px solid var(--ink);
+  background: var(--ink);
+  color: #fff;
+  padding: 10px 13px;
+  font-size: 11px;
+  font-weight: 800;
+  white-space: nowrap;
+  cursor: pointer;
+}
+.field-note code { background: #e6e2d8; padding: 2px 4px; }
+.field-grid { display: grid; grid-template-columns: minmax(0, 1fr) 180px; gap: 18px; }
+.font-picker label + input { margin-bottom: 0; }
+.font-picker input + label { margin-top: 12px; }
+.font-fallback {
+  margin-top: 12px;
+  border: 1px dashed var(--line);
+  padding: 10px 12px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  color: var(--muted);
+  font-size: 11px;
+}
+.font-fallback button { background: transparent; color: var(--ink); padding: 7px 9px; }
 .sr-only { position: absolute; width: 1px; height: 1px; overflow: hidden; clip: rect(0, 0, 0, 0); }
 .over-limit { color: #c52c38; }
 
@@ -96,6 +129,7 @@ textarea:focus, input:focus, select:focus { border-color: var(--purple); box-sha
 }
 .glyph-preview canvas { width: 56px; height: 56px; image-rendering: pixelated; border: 1px solid #414651; background: #141720; }
 .more-glyphs { color: var(--acid); font: 700 12px "Cascadia Code", monospace; }
+.preview-placeholder { color: #a8adb8; font-size: 12px; }
 .primary-button {
   width: 100%;
   border: 1px solid var(--ink);
@@ -154,6 +188,7 @@ footer { background: var(--ink); color: #fff; padding: 28px max(28px, calc((100v
   .status-pill i { margin: 0; }
   h1 { font-size: 48px; }
   .field-grid { grid-template-columns: 1fr; gap: 0; }
+  .font-access-box, .font-fallback { align-items: stretch; flex-direction: column; }
   .control-panel, .guide-panel { padding: 24px 19px; }
   .glyph-preview canvas { width: 47px; height: 47px; }
   footer { padding: 25px 15px; flex-direction: column; gap: 8px; }
