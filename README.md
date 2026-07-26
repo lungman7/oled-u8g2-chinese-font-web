@@ -20,6 +20,10 @@
 網頁提供的多檔選取按鈕，在 `C:\Windows\Fonts` 中選取 `.ttf`、`.otf` 或
 `.ttc` 字型檔。
 
+目前 Raspberry Pi 的 HTTPS 由 Cloudflare Quick Tunnel 提供。Nginx 會把
+公網 IP 的 `/fontgen/` HTTP 請求轉向 HTTPS 網址；Quick Tunnel 若因服務
+重建而取得新網址，需同步更新 `deploy/nginx-fontgen.conf` 中的網址。
+
 ## 本機開發
 
 ```bash
